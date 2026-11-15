@@ -1,0 +1,12 @@
+parametro_id,sistema_id,nombre_metrica,unidad_medida,valor_0g,valor_lunar_016g,valor_marte_038g,valor_tierra_1g,referencia_hrr
+PAR-BMD-LS,OSEO,Pérdida DMO Columna Lumbar (L1-L4),% por mes,-1.06,-0.65,-0.32,0,Evidence Report: Bone Fracture Risk (NASA/TP-2016-218580)
+PAR-BMD-FN,OSEO,Pérdida DMO Cuello Femoral,% por mes,-1.42,-0.88,-0.44,0,HRR Bone Risk Evidence 2021
+PAR-BMD-PEL,OSEO,Pérdida DMO Pelvis / Trocánter,% por mes,-1.56,-0.95,-0.48,0,NASA LSDA In-flight DXA Survey
+PAR-CAL-EXC,OSEO,Excreción Urinaria de Calcio,mg / 24h,320,260,210,140,Evidence Report: Renal Stone Risk (HRP-47060)
+PAR-MUSC-SOL,MUSC,Atrofia Sección Transversal Sóleo,% reducción/6m,-24.5,-16,-9.5,0,HRR Muscle Atrophy Risk (NASA/TP-2017-219284)
+PAR-MUSC-FOR,MUSC,Fuerza Máxima de Dorsiflexión / Plantarflexión,% reducción/6m,-28,-18.5,-11,0,NASA OSDR OSD-616 Force Plate Data
+PAR-VEST-VOR,VEST,Ganancia Reflejo Vestíbulo-Ocular (VOR),Ratio ganancia (ideal 1.0),0.76,0.88,0.94,1,Evidence Report: Sensorimotor Impairment (NASA/TP-2016-218578)
+PAR-VEST-SMS,VEST,Incidencia Síndrome de Adaptación al Espacio (SMS),% tripulantes afectados,72,40,35,0,NASA Johnson Space Center Medical Operations
+PAR-CARD-VOL,CARD,Contracción de Volemia Plasmática,% cambio respecto a 1g,-14.5,-9,-5.5,0,Evidence Report: Cardiovascular Deconditioning (NASA/TM-2016-219285)
+PAR-CARD-CO,CARD,Gasto Cardíaco en Reposo (CO),L / min,4.1,4.6,4.9,5.2,ESA Erasmus Ultrasound Echocardiography Data
+PAR-SANS-ONSD,CARD,Diámetro Vaina Nervio Óptico (ONSD),mm,6.2,5.6,5.2,4.8,Evidence Report: SANS Optic Disc Edema (NASA/TP-2017-219290)

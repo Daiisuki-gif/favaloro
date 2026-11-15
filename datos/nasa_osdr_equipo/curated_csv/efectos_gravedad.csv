@@ -1,0 +1,17 @@
+efecto_id,sistema_id,nivel_gravedad_g,entorno,tasa_degradacion_mensual_pct,estado_remodelacion,mecanostato_umbral_microstrain,riesgo_operativo
+EF-M-00,MUSC,0,Microgravedad (Tránsito / ISS),5,Atrofia Acelerada,150,Crítico
+EF-M-16,MUSC,0.16,Superficie Lunar,3.2,Atrofia Moderada,350,Alto
+EF-M-38,MUSC,0.38,Superficie Marciana,1.8,Atrofia Parcial / Compensable,650,Medio
+EF-M-10,MUSC,1,Tierra,0,Homeostasis Nominal,1200,Nulo
+EF-O-00,OSEO,0,Microgravedad (Tránsito / ISS),1.5,Resorción Severa (Osteopenia),180,Crítico
+EF-O-16,OSEO,0.16,Superficie Lunar,0.9,Resorción Moderada,420,Alto
+EF-O-38,OSEO,0.38,Superficie Marciana,0.45,Resorción Leve (Infraluminal),720,Medio
+EF-O-10,OSEO,1,Tierra,0,Equilibrio Osteoclasto/Osteoblasto,1350,Nulo
+EF-V-00,VEST,0,Microgravedad (Tránsito / ISS),0,Desconexión Gravitatoria / SMS Fase 1,0,Crítico (Primeras 72h)
+EF-V-16,VEST,0.16,Superficie Lunar,0,Cizallamiento Otolítico Sub-umbral,0,Medio
+EF-V-38,VEST,0.38,Superficie Marciana,0,Recalibración Otolítica Incompleta (OTTR),0,Medio (Días 1-4 EVA)
+EF-V-10,VEST,1,Tierra,0,Calibración Terrestre 1g,0,Nulo
+EF-C-00,CARD,0,Microgravedad (Tránsito / ISS),2.2,Hipovolemia -15% & Desacondicionamiento,0,Crítico
+EF-C-16,CARD,0.16,Superficie Lunar,1.4,Gradiente Hidrostático Débil,0,Alto
+EF-C-38,CARD,0.38,Superficie Marciana,0.8,Gradiente Parcial (Restauración Parcial),0,Medio
+EF-C-10,CARD,1,Tierra,0,Gradiente Hidrostático Normal,0,Nulo

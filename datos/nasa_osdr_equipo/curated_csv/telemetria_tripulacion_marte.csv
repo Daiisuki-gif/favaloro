@@ -1,0 +1,6 @@
+astronauta_id,nombre,rol,dias_marte,gravedad,bpSys,bpDia,co,fnirs,vor,otolith,soleus_csa,strain_tibia,grf_bw,ortho_risk_pct,status,diagnostico
+AST-01,CDR. Marcos Varela,Comandante de Misión,42,0.38,116,74,5.2,73,0.96,94,28.4,1240,1.82,8,Nominal,Adaptación óptima a 0.38g. Apto para EVA.
+AST-02,Dr. Elena Rostova,Oficial Médico / Neurobióloga,42,0.38,112,70,4.9,75,0.98,96,26.8,1180,1.74,10,Nominal,Equilibrio hemodinámico estable. Reacción otolítica normal.
+AST-03,Ing. Kenji Sato,Especialista EVA / Estructuras,42,0.38,92,54,3.8,59,0.88,85,24.1,920,1.35,34,Critical,"ALERTA CRÍTICA: Hipotensión ortostática severa, microstrain sub-umbral (920 ue < 1000 ue). Riesgo de síncope en EVA."
+AST-04,Dra. Amara Okafor,Especialista Carga Útil / Bioquímica,42,0.38,120,78,5,71,0.91,88,25.5,1040,1.58,18,Warning,Desacondicionamiento muscular leve en miembros inferiores. Reforzar protocolo ARED.
+AST-05,Tte. Lucas Silva,Piloto de Módulo / Telecomunicaciones,42,0.38,122,80,5.4,74,0.97,95,29.1,1280,1.88,7,Nominal,Parámetros nominales en los 4 sistemas fisiológicos a 0.38g.
