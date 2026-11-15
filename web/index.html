@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#05070c" />
+  <title>FAVALORO · Monitoreo de salud para astronautas</title>
+  <meta name="description" content="FAVALORO: monitoreo de salud para astronautas. Brazalete, salud mental, estrés y nutrición, con vistas para comandante, especialista de misión, oficial médico y tripulante. The Muds Devs · NASA Space Apps 2026." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Manrope:wght@300..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <!-- Idioma: inglés por defecto, español como traducción (traduce la pantalla antes de mostrarla). -->
+  <script src="js/i18n.js"></script>
+  <script src="js/i18n-views.js"></script>
+  <script src="js/i18n-assistant.js"></script>
+  <!-- Preferencias de vista guardadas: se aplican antes de dibujar, para que no parpadee. -->
+  <script>
+    (function () {
+      var p = {}; try { p = JSON.parse(localStorage.getItem('fv_a11y') || '{}'); } catch (e) { /* sin almacenamiento */ }
+      var d = document.documentElement, th = p.theme || 'dark';
+      if (th === 'auto') th = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      d.dataset.theme = th; d.dataset.text = p.text || 'n'; d.dataset.contrast = p.contrast ? 'high' : 'n';
+      if (!p.contrast && matchMedia('(prefers-contrast: more)').matches) d.dataset.contrast = 'high';
+    })();
+  </script>
+</head>
+<body data-view="landing">
+<!-- Panel de vista: tema claro u oscuro, tamaño de letra y alto contraste (para baja visión). -->
+<div class="a11y" id="a11y" role="dialog" aria-label="Vista" hidden>
+  <div class="a11y-h"><b>Vista</b><button type="button" class="btn-line label" data-a11y-close>Cerrar</button></div>
+  <fieldset><legend class="label">Tema</legend><div class="seg" role="radiogroup"><button type="button" role="radio" data-set="theme" data-val="dark">Oscuro</button><button type="button" role="radio" data-set="theme" data-val="light">Claro</button><button type="button" role="radio" data-set="theme" data-val="auto">Automático</button></div></fieldset>
+  <fieldset><legend class="label">Tamaño de letra</legend><div class="seg" role="radiogroup"><button type="button" role="radio" data-set="text" data-val="n">Normal</button><button type="button" role="radio" data-set="text" data-val="l">Grande</button><button type="button" role="radio" data-set="text" data-val="xl">Muy grande</button></div></fieldset>
+  <fieldset><legend class="label">Contraste</legend><div class="seg" role="radiogroup"><button type="button" role="radio" data-set="contrast" data-val="0">Normal</button><button type="button" role="radio" data-set="contrast" data-val="1">Alto</button></div></fieldset>
+  <p class="note">Se guarda en este dispositivo y vale para el inicio, el ingreso y la app. La foto de portada del inicio queda siempre como foto del espacio.</p>
+</div>
+
+<!-- =============================================================
+     INICIO (landing)
+     ============================================================= -->
+<div id="landing">
+<header class="hdr">
+  <div class="hdr-bar">
+    <a href="#top" class="brand" data-go aria-label="FAVALORO: volver arriba">
+      <span class="logo-anim" id="brandLogo">
+        <img src="media/logo-full.png" alt="" class="la-img" />
+        <span class="la-shine" aria-hidden="true"></span>
+        <svg class="la-fx" viewBox="0 0 1290 830" aria-hidden="true">
+          <path class="la-ecg" pathLength="1" d="M532 351H552L564 325L586 413L632 233L670 415L692 329L712 355H770"/>
+          <g class="la-stars">
+            <path style="--d:0s"   transform="translate(1005 85)" d="M0-58C4-14 14-4 58 0 14 4 4 14 0 58-4 14-14 4-58 0-14-4-4-14 0-58Z"/>
+            <path style="--d:.8s"  transform="translate(227 167) scale(.45)" d="M0-58C4-14 14-4 58 0 14 4 4 14 0 58-4 14-14 4-58 0-14-4-4-14 0-58Z"/>
+            <path style="--d:1.5s" transform="translate(1113 353) scale(.6)" d="M0-58C4-14 14-4 58 0 14 4 4 14 0 58-4 14-14 4-58 0-14-4-4-14 0-58Z"/>
+            <path style="--d:2.2s" transform="translate(636 708) scale(.55)" d="M0-58C4-14 14-4 58 0 14 4 4 14 0 58-4 14-14 4-58 0-14-4-4-14 0-58Z"/>
+          </g>
+        </svg>
+      </span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#escaneo" data-go class="label">Escaneo</a>
+      <a href="#datos" data-go class="label">Datos</a>
+      <a href="#roles" data-go class="label">Roles</a>
+      <button type="button" class="btn-line label lang-btn" data-lang-toggle data-noi18n>ES</button>
+      <button type="button" class="btn-line label a11y-btn" data-a11y aria-expanded="false" aria-controls="a11y" aria-label="Vista: tema, tamaño de letra y contraste">Aa</button>
+      <button type="button" class="btn-white label" data-login>Ingresar</button>
+    </nav>
+    <div class="hdr-m">
+      <button type="button" class="btn-line label lang-btn" data-lang-toggle data-noi18n>ES</button>
+      <button type="button" class="btn-line label a11y-btn" data-a11y aria-expanded="false" aria-controls="a11y" aria-label="Vista: tema, tamaño de letra y contraste">Aa</button>
+      <button type="button" class="menu-btn label" aria-expanded="false" aria-controls="menu">Menú</button>
+    </div>
+  </div>
+  <div id="menu" class="menu" inert>
+    <a href="#escaneo" data-go><span class="label">01</span>Escaneo</a>
+    <a href="#datos" data-go><span class="label">02</span>Datos</a>
+    <a href="#roles" data-go><span class="label">03</span>Roles</a>
+    <button type="button" class="btn-white label" data-login>Ingresar</button>
+  </div>
+</header>
+
+<main>
+<!-- ====================== 1 · EARTHRISE ====================== -->
+<section id="top" class="er" aria-label="Inicio: la Tierra saliendo sobre la Luna">
+  <div class="er-stage">
+    <div class="er-l" data-l="sky"><picture><source media="(max-width: 767px)" srcset="layers/m/sky.webp"><img src="layers/d/sky.webp" alt="" fetchpriority="high"></picture></div>
+    <div class="er-l" data-l="earth"><picture><source media="(max-width: 767px)" srcset="layers/m/earth.webp"><img src="layers/d/earth.webp" alt=""></picture></div>
+    <div class="er-l" data-l="moonscape"><picture><source media="(max-width: 767px)" srcset="layers/m/moonscape.webp"><img src="layers/d/moonscape.webp" alt=""></picture></div>
+
+    <!-- El título va entre la llanura y el cráter. -->
+    <div class="er-title" id="erTitle">
+      <h1 id="heroTitle">FAVALORO</h1>
+      <p class="label">Monitoreo de salud para astronautas</p>
+    </div>
+
+    <div class="er-l" data-l="frame"><picture><source media="(max-width: 767px)" srcset="layers/m/frame.webp"><img src="layers/d/frame.webp" alt=""></picture></div>
+    <div class="er-l" data-l="astronaut"><picture><source media="(max-width: 767px)" srcset="layers/m/astronaut.webp"><img src="layers/d/astronaut.webp" alt=""></picture></div>
+    <div class="er-l" data-l="ground"><picture><source media="(max-width: 767px)" srcset="layers/m/ground.webp"><img src="layers/d/ground.webp" alt=""></picture><div class="er-apron"></div></div>
+
+    <div class="er-veil" id="erVeil" aria-hidden="true">
+      <div>
+        <p class="label">The Muds Devs · NASA Space Apps 2026</p>
+        <p class="er-veil-cta">Deslizá para despejar el polvo</p>
+        <span class="bounce">↓</span>
+      </div>
+    </div>
+    <canvas class="er-dust" id="erDust" aria-hidden="true"></canvas>
+
+    <div class="er-hud" id="erHud" aria-hidden="true">
+      <div class="brackets"></div>
+      <div class="q tl"><p id="erClock">T+ 00:00:00</p><p class="dim">Reloj de misión</p></div>
+      <div class="q tr"><p>Tierra <span class="c-earth" id="erElev">0.0°</span></p><p class="dim">Sobre el horizonte</p></div>
+      <div class="q bl">Base lunar · Mare Tranquillitatis · 0.67°N 23.47°E</div>
+      <div class="q br"><p>Pulso <span class="c-sun" data-vital="hr">72</span> lpm</p><p class="dim">Astronauta 1 · simulado</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 2 · ESCANEO BIOMÉTRICO ====================== -->
+<section id="escaneo" class="bs" aria-labelledby="bsTitle">
+  <div class="bs-stage" id="bsStage">
+    <canvas class="bs-smoke" id="bsSmoke" aria-hidden="true"></canvas>
+
+    <div class="bs-copy">
+      <p class="label c-earth">Escaneo biométrico</p>
+      <h2 id="bsTitle">Apuntá. FAVALORO mide.</h2>
+      <p class="bs-body">Mové la mira sobre el traje: cuando pasa por un sensor, lo enfoca y te muestra lo que mide en vivo. En el celular, tocá un punto.</p>
+      <ol class="bs-list" id="bsList"></ol>
+    </div>
+
+    <div class="bs-pos">
+      <div class="bs-frame" id="bsFrame">
+        <div class="bs-tilt" id="bsTilt">
+          <div class="bs-photo">
+            <img src="media/scan.jpg" width="1200" height="1475" alt="Astronauta del Apollo 11 parado sobre la superficie de la Luna, con el traje espacial completo." />
+          </div>
+          <div class="bs-beam" id="bsBeam" aria-hidden="true"></div>
+          <div class="bs-marks" id="bsMarks"></div>
+        </div>
+      </div>
+      <p class="bs-credit label">Foto: NASA · Apollo 11 (AS11-40-5903), dominio público</p>
+    </div>
+
+    <!-- La mira: sigue al puntero y se engancha en el sensor más cercano. -->
+    <div class="bs-scope" id="bsScope" aria-hidden="true">
+      <svg viewBox="-60 -60 120 120">
+        <circle r="44" class="sc-o"/>
+        <circle r="30" class="sc-m"/>
+        <path class="sc-t" d="M0-58V-46M0 46V58M-58 0H-46M46 0H58"/>
+        <path class="sc-b" d="M-18-12A21.6 21.6 0 0 1-12-18M12-18A21.6 21.6 0 0 1 18-12M18 12A21.6 21.6 0 0 1 12 18M-12 18A21.6 21.6 0 0 1-18 12"/>
+        <circle r="2.5" class="sc-c"/>
+      </svg>
+      <div class="bs-read" id="bsRead"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 3 · RECORRIDO DEL DATO ====================== -->
+<section id="datos" class="dp" aria-labelledby="dpTitle">
+  <div class="dp-stage">
+    <div class="dp-head">
+      <div>
+        <p class="label c-earth">Recorrido del dato</p>
+        <h2 id="dpTitle">Del pulso al médico, dibujado mientras bajás.</h2>
+      </div>
+      <p class="label dim">Distancia recorrida <b id="dpKm" class="white">0</b> km</p>
+    </div>
+    <div class="dp-svgwrap">
+      <svg viewBox="0 0 1200 600" class="dp-svg" role="img" aria-label="El camino del dato: del brazalete a la app, a la antena de la base, a la Tierra y al médico, dibujado en cuatro tramos.">
+        <defs>
+          <clipPath id="dpEarthClip"><circle cx="960" cy="300" r="92"/></clipPath>
+          <clipPath id="dpMoonClip"><circle cx="250" cy="380" r="149"/></clipPath>
+          <radialGradient id="dpMoon" cx="34%" cy="32%" r="80%"><stop offset=".45" stop-color="#05070c" stop-opacity="0"/><stop offset=".85" stop-color="#05070c" stop-opacity=".55"/><stop offset="1" stop-color="#05070c" stop-opacity=".8"/></radialGradient>
+          <radialGradient id="dpMoonGlow"><stop offset=".88" stop-color="#f2e6c9" stop-opacity=".18"/><stop offset="1" stop-color="#f2e6c9" stop-opacity="0"/></radialGradient>
+          <radialGradient id="dpGlow"><stop offset=".8" stop-color="#6fb6ff" stop-opacity=".35"/><stop offset="1" stop-color="#6fb6ff" stop-opacity="0"/></radialGradient>
+        </defs>
+        <g id="dpStars" fill="#fff"></g>
+        <!-- Luna: foto real de la NASA (LRO, dominio público), con sombra suave para darle volumen como a la Tierra. -->
+        <circle cx="250" cy="380" r="166" fill="url(#dpMoonGlow)"/>
+        <image href="media/moon.jpg" x="89.2" y="219.2" width="321.6" height="321.6" clip-path="url(#dpMoonClip)" preserveAspectRatio="none"/>
+        <circle cx="250" cy="380" r="149" fill="url(#dpMoon)"/>
+        <circle cx="960" cy="300" r="108" fill="url(#dpGlow)"/>
+        <image href="layers/m/earth.webp" x="658.5" y="170.8" width="458.9" height="259.5" clip-path="url(#dpEarthClip)" preserveAspectRatio="none"/>
+        <g id="dpGhost" fill="none" stroke="#fff" stroke-opacity=".1" stroke-width="1.5" stroke-dasharray="3 6"></g>
+        <g id="dpLegs" fill="none" stroke-width="2.2" stroke-linecap="round"></g>
+        <g font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="2" fill="#8b909b">
+          <g transform="translate(150 470)"><rect x="-16" y="-9" width="32" height="18" rx="5" fill="#1b1f27" stroke="#6fb6ff"/><circle r="3" fill="#f2e6c9"/><text y="38" text-anchor="middle">BRAZALETE</text></g>
+          <g transform="translate(330 470)"><rect x="-13" y="-20" width="26" height="40" rx="5" fill="#1b1f27" stroke="#6fb6ff"/><rect x="-8" y="-14" width="16" height="24" rx="2" fill="#6fb6ff" opacity=".35"/><text y="44" text-anchor="middle">APP</text></g>
+          <g transform="translate(270 228)"><path d="M0 0V-26M-12-36A16 16 0 0 1 12-36M-20-44A28 28 0 0 1 20-44" stroke="#f2e6c9" stroke-width="2" fill="none"/><circle r="4" fill="#f2e6c9"/><text y="-56" text-anchor="middle">ANTENA</text></g>
+          <text x="250" y="566" text-anchor="middle">BASE LUNAR</text>
+          <text x="960" y="438" text-anchor="middle">TIERRA · CONTROL</text>
+          <g transform="translate(1110 470)"><circle r="16" fill="#1b1f27" stroke="#8cc56b"/><path d="M-6 0H6M0-6V6" stroke="#8cc56b" stroke-width="2.4"/><text y="40" text-anchor="middle">MÉDICO</text></g>
+        </g>
+        <g id="dpPacket" transform="translate(150 470)"><circle r="12" fill="#6fb6ff" opacity=".25"/><circle r="4.5" fill="#fff"/></g>
+      </svg>
+    </div>
+    <div class="dp-leg">
+      <p class="label c-earth" id="dpWhen">1 s · Tramo 1/4</p>
+      <div id="dpText" aria-live="polite"></div>
+      <div class="dp-dots" id="dpDots" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 4 · ROLES ====================== -->
+<section id="roles" class="rl" aria-labelledby="rlTitle">
+  <div class="ap-glow" aria-hidden="true"></div>
+  <div class="rl-head" data-reveal>
+    <p class="label c-earth">Una app, cuatro miradas</p>
+    <h2 id="rlTitle">Cada uno ve lo que necesita.</h2>
+    <p class="rl-body">El brazalete mide solo. Cada tripulante registra su día en un minuto: cómo durmió, cómo se siente, cuánto estrés tiene y qué comió. Con eso, cada rol ve su propia vista.</p>
+  </div>
+  <ol class="rl-cards" id="rlCards"></ol>
+  <div class="rl-cta" data-reveal>
+    <button type="button" class="btn-earth label" data-login>Ingresar a FAVALORO →</button>
+    <p class="label dim">Demo con datos simulados. No reemplaza una evaluación médica.</p>
+  </div>
+</section>
+</main>
+
+<footer class="ftr">
+  <a class="sa-logo" href="https://www.spaceappschallenge.org/" target="_blank" rel="noopener" aria-label="NASA Space Apps Challenge 2026">
+    <img src="media/spaceapps-white.svg" alt="NASA Space Apps Challenge" class="sa-w" width="122" height="48" />
+    <img src="media/spaceapps-black.svg" alt="NASA Space Apps Challenge" class="sa-b" width="122" height="48" />
+  </a>
+  <span class="white">FAVALORO · The Muds Devs · NASA Space Apps 2026</span>
+  <span>Fotos: NASA (dominio público) · Paisaje: pack SELENE</span>
+  <a href="#top" data-go>Volver a la superficie ↑</a>
+</footer>
+</div>
+
+<!-- =============================================================
+     INGRESO
+     ============================================================= -->
+<!-- Fondo fijo del ingreso y la app: el mismo paisaje del inicio, quieto y atenuado. -->
+<div class="scene" aria-hidden="true">
+  <picture><source media="(max-width: 767px)" srcset="layers/m/sky.webp"><img src="layers/d/sky.webp" alt=""></picture>
+  <picture><source media="(max-width: 767px)" srcset="layers/m/earth.webp"><img src="layers/d/earth.webp" alt="" class="scene-earth"></picture>
+  <picture><source media="(max-width: 767px)" srcset="layers/m/moonscape.webp"><img src="layers/d/moonscape.webp" alt=""></picture>
+  <div class="scene-shade"></div>
+</div>
+
+<div id="login" class="lg" hidden>
+  <div class="lg-hud brackets" aria-hidden="true"></div>
+  <header class="lg-top">
+    <img src="media/logo-full.png" alt="FAVALORO" class="lg-logo" />
+    <div class="lg-tools"><button type="button" class="btn-line label lang-btn" data-lang-toggle data-noi18n>ES</button><button type="button" class="btn-line label a11y-btn" data-a11y aria-expanded="false" aria-controls="a11y" aria-label="Vista: tema, tamaño de letra y contraste">Aa</button><button type="button" class="label lg-back" data-home>← Volver al inicio</button></div>
+  </header>
+  <div class="lg-main" role="dialog" aria-modal="true" aria-labelledby="lgTitle">
+    <div class="lg-copy">
+      <p class="label c-earth">Ingreso a la misión</p>
+      <h2 id="lgTitle">¿Quién está a bordo?</h2>
+      <p class="lg-sub">Elegí tu rol. Cada uno ve lo que necesita para cuidar a la tripulación.</p>
+      <p class="label dim lg-note">Demo sin contraseñas · los datos quedan en este navegador</p>
+      <a class="sa-logo lg-sa" href="https://www.spaceappschallenge.org/" target="_blank" rel="noopener" aria-label="NASA Space Apps Challenge 2026">
+        <img src="media/spaceapps-white.svg" alt="NASA Space Apps Challenge" class="sa-w" width="102" height="40" />
+        <img src="media/spaceapps-black.svg" alt="NASA Space Apps Challenge" class="sa-b" width="102" height="40" />
+      </a>
+    </div>
+    <div class="lg-pick">
+      <ol class="lg-roles" id="lgRoles" role="radiogroup" aria-label="Rol"></ol>
+      <div class="lg-who" id="lgWho" hidden>
+        <label for="lgCrew" class="label">Tripulante</label>
+        <select id="lgCrew"></select>
+      </div>
+      <button type="button" class="btn label lg-go" id="lgGo" disabled>Elegí un rol</button>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================================
+     APP
+     ============================================================= -->
+<div id="app" class="app" hidden>
+  <header class="app-top">
+    <img src="media/logo-full.png" alt="FAVALORO" class="app-logo" />
+    <div class="app-who"><span class="label c-earth" id="appRoleK"></span><b id="appRole"></b></div>
+    <span class="app-clock label" id="appClock"></span>
+    <button type="button" class="btn-line label app-sos" id="appSos" hidden>Pedir ayuda</button>
+    <button type="button" class="btn-line label lang-btn" data-lang-toggle data-noi18n>ES</button>
+    <button type="button" class="btn-line label a11y-btn" data-a11y aria-expanded="false" aria-controls="a11y" aria-label="Vista: tema, tamaño de letra y contraste">Aa</button>
+    <button type="button" class="btn-line label" id="appOut">Salir</button>
+  </header>
+  <nav class="app-tabs" id="appTabs" aria-label="Secciones"></nav>
+  <main class="app-main" id="appMain" tabindex="-1"></main>
+
+  <!-- Asesor: abre a la derecha. -->
+  <button type="button" class="adv-btn" id="advBtn" aria-controls="adv" aria-expanded="false">
+    <span class="adv-dot" id="advDot" aria-hidden="true"></span><span class="label">Asistente</span><b id="advCount"></b>
+  </button>
+  <aside class="adv" id="adv" aria-labelledby="advTitle" hidden>
+    <div class="adv-h">
+      <div class="adv-id">
+        <span class="adv-orb" id="advOrb" aria-hidden="true"><i></i></span>
+        <div><h2 id="advTitle">Asistente FAVALORO</h2><p class="adv-state" id="advState" aria-live="polite">Listo para charlar</p></div>
+      </div>
+      <div class="adv-hb">
+        <button type="button" class="adv-pill label" id="advMute" aria-pressed="false" title="Silenciar el sonido y la voz de las alertas por 15 minutos">Alertas: con sonido</button>
+        <button type="button" class="adv-pill label" id="advVoice" aria-pressed="true">Voz: sí</button>
+        <button type="button" class="adv-pill label" id="advClose">Cerrar</button>
+      </div>
+    </div>
+    <div class="adv-tabs" id="advTabs" role="tablist" aria-label="Secciones del asistente"></div>
+    <div class="adv-body" id="advBody"></div>
+    <form class="adv-ask" id="advAsk">
+      <div class="adv-chips" id="advChips" aria-label="Preguntas rápidas"></div>
+      <div class="adv-row">
+        <button type="button" class="adv-talk" id="advTalk" aria-pressed="false"><span class="adv-wave" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">Hablar</span></button>
+        <label for="advQ" class="sr">Escribile al asistente</label>
+        <input type="text" id="advQ" maxlength="200" autocomplete="off" placeholder="O escribí acá…">
+        <button type="submit" class="adv-send label" aria-label="Enviar">Enviar</button>
+      </div>
+      <p class="adv-how" id="advHow">Responde con los datos de la misión · no reemplaza al médico</p>
+    </form>
+  </aside>
+</div>
+
+<!-- Llamada de emergencia entrante (tripulante). -->
+<div class="call" id="call" hidden role="alertdialog" aria-modal="true" aria-labelledby="callTitle">
+  <div class="call-box hud">
+    <p class="label c-bad call-k">Llamada de emergencia</p>
+    <h2 id="callTitle">¿Estás bien?</h2>
+    <p class="call-from" id="callFrom"></p>
+    <p class="call-t"><b id="callLeft">30</b><span class="label">segundos para responder</span></p>
+    <div class="call-act">
+      <button type="button" class="btn label" id="callOk">Estoy bien</button>
+      <button type="button" class="btn-line label c-bad" id="callHelp">Necesito ayuda</button>
+    </div>
+    <p class="label dim">Si nadie responde, FAVALORO avisa al compañero más cercano, al oficial médico y a Control de Misión.</p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.11/dist/lenis.min.js"></script>
+<script src="js/store.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/main.js"></script>
+<script src="js/app.js"></script>
+<script src="js/live.js"></script>
+</body>
+</html>
