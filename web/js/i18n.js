@@ -153,24 +153,39 @@ window.FVI18N = (() => {
     if (v == null) for (const [r, f] of RX) { if (f && r.test(k)) { v = k.replace(r, f); if (v === k) v = null; else break; } }
     return v;
   }
+  const ES_WORD = /[áéíóúñ¿¡]|\b(que|de|del|la|el|los|las|con|para|por|una|sin|en|y|se|al|lo)\b/gi;
   // Textos compuestos (reportes, listas con «·»): se traducen por partes y se conservan los separadores.
   const SEP = /(\n+|\s+-\s+|\s+·\s+|(?<=[.?!])\s+(?=[A-ZÁÉÍÓÚ¿¡[]))/;
+  // Se prueba primero el tramo más largo posible (varias frases juntas pueden ser una sola clave).
   function bySegments(s) {
     const parts = String(s).split(SEP); if (parts.length < 2) return null;
-    let hit = 0;
-    const out = parts.map((p, i) => {
-      if (i % 2) return p; // separador
-      const k = norm(p); if (!k) return p;
-      const v = lookup(k) ?? viaLast(k); if (v == null) return p;
-      hit++; return p.replace(/\S[\s\S]*\S|\S/, () => v);
-    });
+    let hit = 0; const out = [];
+    for (let i = 0; i < parts.length; i += 2) {
+      let done = false;
+      // Nunca se une a través de un salto de línea: cada renglón se traduce por separado.
+      let end = i; while (end + 2 < parts.length && !/\n/.test(parts[end + 1])) end += 2;
+      for (let j = end; j >= i; j -= 2) {
+        if (i === 0 && j === parts.length - 1) continue; // el texto entero ya se probó
+        const chunk = parts.slice(i, j + 1).join(''), k = norm(chunk); if (!k) break;
+        // Varias frases juntas: solo si son una clave exacta del diccionario (no una regla general).
+        const v = j === i ? lookup(k) ?? viaLast(k) : EN[k] ?? (/\d/.test(k) ? fromTpl(k) : null);
+        if (v != null) { out.push(chunk.replace(/\S[\s\S]*\S|\S/, () => v)); if (j + 1 < parts.length) out.push(parts[j + 1]); hit++; i = j; done = true; break; }
+      }
+      if (!done) { out.push(parts[i]); if (i + 1 < parts.length) out.push(parts[i + 1]); }
+    }
     return hit ? out.join('') : null;
   }
   function tr(s) {
     if (lang !== 'en' || s == null) return s;
     const k = norm(String(s)); if (!k) return s;
     const v = lookup(k);
-    if (v == null) { const seg = bySegments(s) ?? viaLast(k); return seg == null ? s : seg; }
+    if (v == null) {
+      // Dos formas de partir el texto (por frases o por «Título: texto»): gana la que deja menos español.
+      const a = bySegments(s), b = viaLast(k);
+      const left = (x) => (x == null ? 1e9 : (x.match(ES_WORD) || []).length);
+      const best = left(b) < left(a) ? b : a ?? b;
+      return best == null ? s : best;
+    }
     // Conserva los espacios de los bordes (separan textos en línea).
     const lead = String(s).match(/^\s*/)[0], tail = String(s).match(/\s*$/)[0];
     return lead + v + tail;

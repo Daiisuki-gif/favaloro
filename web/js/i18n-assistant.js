@@ -215,7 +215,7 @@ FVI18N.add({
   [/^(.+?)\. Próximo paso: (.+)$/, (m, a, b) => `${FVI18N.tr(a)}. Next step: ${FVI18N.tr(b)}`],
 ], [
   // Reglas generales (se aplican al final): «Astronauta 3: …» y otros «Título: texto».
-  [/^([^:]{2,40}): (.+)$/, (m, a, b) => { const x = FVI18N.tr(a), y = FVI18N.tr(b); return x === a && y === b ? m : `${x}: ${y}`; }],
+  [/^([^:]{2,70}): (.+)$/, (m, a, b) => { const x = FVI18N.tr(a), y = FVI18N.tr(b); return x === a && y === b ? m : `${x}: ${y}`; }],
   // Títulos con punto final: «Resumen del día.»
   [/^([^.]+)\.$/, (m, a) => { const x = FVI18N.tr(a); return x === a ? m : x.replace(/[.!?]?$/, '.'); }],
 ]);

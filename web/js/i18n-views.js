@@ -409,6 +409,6 @@ FVI18N.add({
   }],
   // Líneas de los reportes: «- Astronauta…», «[Alta] Astronauta 3: …».
   [/^- (.+)$/, (m, r) => '- ' + FVI18N.tr(r)],
-  [/^\[(Alta|Media|Baja)\] (Astronauta \d+|Toda la tripulación): (.+)$/, (m, p, w, r) => `[${({Alta: 'High', Media: 'Medium', Baja: 'Low'})[p]}] ${FVI18N.tr(w)}: ${FVI18N.tr(r)}`],
+  [/^\[(Alta|Media|Baja|Urgente)\] (Astronauta \d+|Toda la tripulación): (.+)$/, (m, p, w, r) => `[${({Alta: 'High', Media: 'Medium', Baja: 'Low', Urgente: 'Urgent'})[p]}] ${FVI18N.tr(w)}: ${FVI18N.tr(r)}`],
 ]);
 FVI18N.add({'Toda la tripulación': 'Whole crew'});
