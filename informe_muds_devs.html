@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Monitoreo de salud para astronautas – The Muds Devs</title>
+<style>
+  :root{
+    --brown:#6E3922; --deep:#4A2416; --rust:#9E4824; --orange:#C86B34; --amber:#E08A45;
+    --cream:#F1D8AE; --sand:#F8EBD6; --paper:#FCF6EC; --ink:#231B1E; --muted:#8F5135;
+    --green:#4F7A2C; --leaf:#8DAA5B; --blue:#6FA3D8; --line:#EAD6B4;
+    --head:"Bahnschrift","Segoe UI",Arial,sans-serif; --body:"Segoe UI",Arial,sans-serif;
+  }
+  @page{ size:A4; margin:27mm 17mm 22mm 17mm; }
+  @page :first{ margin:0 }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#fff}
+  body{font:9.4pt/1.55 var(--body);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  a{color:var(--orange);text-decoration:none}
+  b,strong{font-weight:600}
+
+  /* ================= PORTADA ================= */
+  .cover{width:210mm;height:297mm;position:relative;break-after:page;overflow:hidden;background:#fff}
+  .cover .art{position:absolute;top:2mm;left:0;width:210mm;height:122mm;object-fit:cover;object-position:bottom}
+  .cover .ground{position:absolute;top:124mm;left:0;right:0;bottom:0;background:
+      radial-gradient(circle at 20% 30%,rgba(241,216,174,.18) 0 .5mm,transparent .6mm),
+      radial-gradient(circle at 70% 60%,rgba(241,216,174,.14) 0 .4mm,transparent .5mm),
+      radial-gradient(circle at 45% 80%,rgba(241,216,174,.12) 0 .35mm,transparent .45mm),
+      linear-gradient(180deg,var(--brown) 0%,var(--deep) 100%);
+      background-size:23mm 19mm,31mm 27mm,17mm 23mm,100% 100%;}
+  .cover .ground::before{content:"";position:absolute;top:0;left:0;right:0;height:1.6mm;
+      background:linear-gradient(90deg,var(--orange),var(--amber),var(--orange))}
+  .cover .inner{position:absolute;top:133mm;left:19mm;right:19mm;bottom:16mm}
+  .eyebrow{font:600 8pt var(--head);color:var(--cream);letter-spacing:1.6pt;text-transform:uppercase;display:flex;align-items:center;gap:3mm}
+  .eyebrow::after{content:"";flex:0 0 18mm;height:.6mm;background:var(--orange)}
+  .cover h1{font:700 31pt/1.08 var(--head);color:#fff;margin:6mm 0 4mm;letter-spacing:-.3pt}
+  .cover h1 em{font-style:normal;color:var(--amber)}
+  .cover .sub{font:10.5pt/1.5 var(--body);color:var(--cream);margin:0 0 6mm;max-width:132mm;opacity:.95}
+  .tags span{display:inline-block;font:600 7.4pt var(--head);letter-spacing:.3pt;color:#fff;padding:1.5mm 3.4mm;border-radius:5mm;margin-right:1.8mm}
+  .t-green{background:var(--green)} .t-blue{background:var(--blue);color:var(--deep)!important} .t-orange{background:var(--orange)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;position:absolute;left:0;right:0;bottom:24mm}
+  .stat{border-top:.5mm solid rgba(241,216,174,.35);padding-top:2.5mm}
+  .stat b{display:block;font:700 22pt/1 var(--head);color:var(--amber)}
+  .stat span{font:8pt/1.35 var(--body);color:var(--cream)}
+  .meta{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:4mm;
+        border-top:.4mm solid rgba(241,216,174,.25);padding-top:4mm}
+  .meta div small{display:block;font:600 6.6pt var(--head);letter-spacing:1pt;text-transform:uppercase;color:var(--amber);margin-bottom:.8mm}
+  .meta div{font:8.6pt/1.35 var(--body);color:var(--cream)}
+  .meta .team{font:700 12pt/1.2 var(--head);color:#fff}
+
+  /* ================= SECCIONES ================= */
+  section{margin-bottom:6mm}
+  .pb{break-after:page;height:0}
+  .sh{display:grid;grid-template-columns:auto 1fr;gap:5mm;align-items:end;margin-bottom:5mm;break-after:avoid}
+  .sh .num{font:700 40pt/1.05 var(--head);margin-bottom:-1.6mm;color:#EBC6A3;letter-spacing:-1pt}
+  .sh .label{font:600 7.2pt var(--head);color:var(--orange);letter-spacing:1.4pt;text-transform:uppercase;margin-bottom:.8mm}
+  .sh h2{font:700 18pt/1.15 var(--head);color:var(--brown);margin:0}
+  .sh::after{content:"";grid-column:1 / -1;height:.3mm;background:linear-gradient(90deg,var(--orange) 0 24mm,var(--line) 24mm)}
+  h3{font:700 11pt var(--head);color:var(--rust);margin:5mm 0 2mm;break-after:avoid;letter-spacing:.1pt}
+  p{margin:0 0 2.6mm}
+  ul{margin:0 0 2.6mm;padding-left:4.6mm} li{margin-bottom:1mm} li::marker{color:var(--orange)}
+  .lead{font-size:10.2pt;line-height:1.6;color:#3a2b26}
+  .src{font-size:7.4pt;color:var(--muted);margin:1mm 0 0}
+  .src::before{content:"↗ ";color:var(--orange);font-weight:700}
+  .warn{display:flex;gap:2mm;font-size:8.2pt;color:var(--rust);background:#FBEDE2;border-radius:1.5mm;padding:1.6mm 2.6mm;margin:1.5mm 0 1.5mm}
+  .warn::before{content:"⚠";font-weight:700}
+  .note{font-size:8.4pt;color:var(--muted);font-style:italic}
+
+  .callout{position:relative;background:var(--sand);border-radius:2mm;padding:4mm 5mm 4mm 14mm;margin:3mm 0 4mm;break-inside:avoid}
+  .callout::before{content:"i";position:absolute;left:4.2mm;top:4.2mm;width:6mm;height:6mm;border-radius:50%;background:var(--orange);
+      color:#fff;font:700 9pt/6mm var(--head);text-align:center}
+  .callout.green{background:#EEF3E4}
+  .callout.green::before{content:"?";background:var(--green)}
+  .callout b.t{display:block;font:700 9.6pt var(--head);color:var(--brown);margin-bottom:1mm}
+  .callout.green b.t{color:var(--green)}
+
+  /* resumen */
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;margin:2mm 0 5mm}
+  .kpi{background:var(--paper);border:.3mm solid var(--line);border-radius:2.5mm;padding:4mm 4.5mm;position:relative;overflow:hidden}
+  .kpi::after{content:"";position:absolute;right:-6mm;top:-6mm;width:18mm;height:18mm;border-radius:50%;background:rgba(200,107,52,.10)}
+  .kpi b{display:block;font:700 26pt/1 var(--head);color:var(--orange)}
+  .kpi span{display:block;font:600 8.6pt/1.35 var(--head);color:var(--brown);margin-top:1.5mm}
+  .kpi small{display:block;font-size:7.6pt;color:var(--muted);margin-top:1mm;line-height:1.4}
+  .findings{counter-reset:f;display:grid;gap:3mm}
+  .finding{display:grid;grid-template-columns:9mm 1fr;gap:3mm;align-items:start;break-inside:avoid}
+  .finding::before{counter-increment:f;content:counter(f);width:9mm;height:9mm;border-radius:50%;background:var(--brown);color:var(--cream);
+      font:700 11pt/9mm var(--head);text-align:center}
+  .finding b{font-family:var(--head);color:var(--brown);font-size:10pt}
+
+  /* peligros */
+  .hazards{display:grid;grid-template-columns:repeat(5,1fr);gap:2.5mm;margin:2mm 0 2mm}
+  .hz{border-radius:2.2mm;padding:3.5mm 3mm 3.2mm;color:#fff;break-inside:avoid;min-height:44mm;display:flex;flex-direction:column}
+  .hz svg{width:9mm;height:9mm;margin-bottom:2mm}
+  .hz b{font:700 8.8pt/1.2 var(--head);margin-bottom:1.6mm;display:block}
+  .hz span{font-size:7.4pt;line-height:1.4;opacity:.95}
+  .h1c{background:var(--orange)} .h2c{background:var(--rust)} .h3c{background:var(--brown)} .h4c{background:var(--green)} .h5c{background:var(--deep)}
+
+  /* tablas */
+  table{width:100%;border-collapse:separate;border-spacing:0;margin:2mm 0 2mm;font-size:8.2pt;line-height:1.42;border-radius:2mm;overflow:hidden;border:.3mm solid var(--line)}
+  thead{display:table-header-group}
+  tr{break-inside:avoid}
+  th{background:var(--brown);color:#fff;text-align:left;padding:2.3mm 2.8mm;font:600 8pt var(--head);letter-spacing:.3pt}
+  td{padding:2.2mm 2.8mm;vertical-align:top;border-top:.3mm solid var(--line)}
+  tbody tr:nth-child(even) td{background:var(--paper)}
+  td.k{font:600 8.4pt var(--head);color:var(--rust)}
+  .pill{display:inline-block;font:600 7pt var(--head);letter-spacing:.2pt;padding:.7mm 2.4mm;border-radius:3mm;white-space:nowrap}
+  .ok{background:#E3EDD5;color:#3C6120} .dev{background:#FBE5D3;color:var(--rust)} .unk{background:#EFE6DA;color:var(--muted)}
+
+  /* tarjetas de dispositivos */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+  .card{background:#fff;border:.3mm solid var(--line);border-radius:2.5mm;padding:4mm 4.2mm 3.4mm;break-inside:avoid;display:flex;flex-direction:column;position:relative}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:1.2mm;border-radius:2.5mm 0 0 2.5mm;background:var(--orange)}
+  .card.wide{grid-column:1 / -1}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:2mm;margin-bottom:1mm}
+  .card h4{font:700 11pt/1.2 var(--head);color:var(--brown);margin:0}
+  .card .org{font:600 7pt var(--head);letter-spacing:.8pt;text-transform:uppercase;color:var(--muted);margin-bottom:2mm}
+  .card ul{font-size:8.5pt;padding-left:4mm;margin-bottom:1.5mm}
+  .chips{display:flex;flex-wrap:wrap;gap:1.2mm;margin:0 0 2mm}
+  .chips span{font:600 6.9pt var(--head);background:var(--sand);color:var(--brown);padding:.6mm 2mm;border-radius:2mm}
+  .card .src{margin-top:auto;padding-top:1mm}
+
+  /* código y fuentes */
+  pre{font:7.6pt/1.5 Consolas,monospace;background:var(--ink);color:#F1E6D2;padding:4mm 5mm;border-radius:2mm;
+      white-space:pre-wrap;margin:2mm 0 2mm;break-inside:avoid;position:relative}
+  pre::before{content:"JavaScript · ejemplo oficial de Chrome";display:block;font:600 6.8pt var(--head);letter-spacing:.8pt;
+      text-transform:uppercase;color:var(--amber);margin-bottom:2mm}
+  .k1{color:#E8A06A} .k2{color:#9CC3EA} .k3{color:#B9CF8F}
+  ol.refs{list-style:none;padding:0;margin:0;counter-reset:r;columns:2;column-gap:7mm;font-size:7.8pt}
+  ol.refs li{counter-increment:r;break-inside:avoid;padding-left:7mm;position:relative;margin-bottom:2.4mm;line-height:1.35}
+  ol.refs li::before{content:counter(r);position:absolute;left:0;top:0;width:5mm;height:5mm;border-radius:50%;background:var(--sand);
+      color:var(--rust);font:700 6.8pt/5mm var(--head);text-align:center}
+  ol.refs a{display:block;font-size:6.6pt;word-break:break-all;color:var(--orange);margin-top:.4mm}
+</style>
+</head>
+<body>
+
+<!-- ================= PORTADA ================= -->
+<div class="cover">
+  <img class="art" src="assets/cover_art.png" alt="">
+  <div class="ground"></div>
+  <div class="inner">
+    <div class="eyebrow">NASA Space Apps Challenge 2026</div>
+    <h1>Monitoreo de salud<br>para <em>astronautas</em></h1>
+    <p class="sub">Qué dispositivos ya existen, cómo se leen sus datos y qué recursos oficiales ofrece el desafío. Cada dato fue comprobado en su fuente original.</p>
+    <div class="tags"><span class="t-green">Exploración humana</span><span class="t-blue">Software</span><span class="t-orange">Exploración espacial</span></div>
+    <div class="stats">
+      <div class="stat"><b>8</b><span>dispositivos analizados, 5 con uso confirmado en el espacio</span></div>
+      <div class="stat"><b>17</b><span>riesgos oficiales de NASA para vuelos espaciales</span></div>
+      <div class="stat"><b>19</b><span>fuentes abiertas y verificadas</span></div>
+    </div>
+    <div class="meta">
+      <div><small>Equipo</small><span class="team">The Muds Devs</span></div>
+      <div><small>Desafío</small>Health Monitoring Software</div>
+      <div><small>Sede</small>Santiago del Estero, Argentina</div>
+      <div><small>Fecha</small>14 de noviembre de 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RESUMEN ================= -->
+<section>
+  <div class="sh"><div class="num">00</div><div><div class="label">Resumen</div><h2>Lo más importante en una página</h2></div></div>
+  <p class="lead">Investigamos qué tecnología existe hoy para monitorear la salud de los astronautas, cómo podría conectarse nuestra app a dispositivos reales y qué recursos publicó la organización. Solo incluimos datos que pudimos comprobar.</p>
+  <div class="kpis">
+    <div class="kpi"><b>5</b><span>dispositivos con uso confirmado en el espacio</span><small>Bio-Monitor, Actiwatch Spectrum, T-Mini, Wearable Monitoring y los monitores ARCHeR de Artemis II.</small></div>
+    <div class="kpi"><b>17</b><span>riesgos que lista NASA</span><small>En tres grupos: fisiología humana (11), comportamiento (5) y radiación (1).</small></div>
+    <div class="kpi"><b>1</b><span>forma directa de leer datos en vivo desde la web</span><small>Web Bluetooth, con JavaScript, desde Chrome o Edge.</small></div>
+  </div>
+  <h3>Hallazgos clave</h3>
+  <div class="findings">
+    <div class="finding"><div><b>Los wearables ya son parte de la rutina en órbita.</b> NASA documenta relojes, vinchas y chalecos usados en la Estación Espacial para estudiar sueño, temperatura corporal, corazón y respiración. La remera Bio-Monitor mide seis tipos de signos vitales y está a bordo desde diciembre de 2018.</div></div>
+    <div class="finding"><div><b>La tendencia es la autonomía.</b> Los desarrollos nuevos, como la remera para Gateway o SpacePatch, apuntan a resistir la radiación del espacio profundo y analizar los datos sin depender de la Tierra.</div></div>
+    <div class="finding"><div><b>Podemos conectar un sensor real en la demo.</b> Con Web Bluetooth una página web puede recibir el pulso en vivo de un pulsómetro estándar; el resto de los indicadores se puede cargar a mano o simular.</div></div>
+    <div class="finding"><div><b>Los riesgos oficiales nos dan la estructura.</b> Cada parte del cuerpo de nuestra app puede vincularse con un riesgo de la lista de NASA, lo que le da respaldo científico a la propuesta.</div></div>
+  </div>
+  <div class="callout green"><b class="t">Lo que todavía no pudimos verificar</b>Situación actual del programa Gateway · resultados del estudio ARCHeR · uso en vuelo de EmbracePlus y SpacePatch · fecha exacta de cierre de la Fitbit Web API.</div>
+</section>
+
+<!-- ================= 1 ================= -->
+<div class="pb"></div>
+<section>
+  <div class="sh"><div class="num">01</div><div><div class="label">Sección 1</div><h2>El desafío</h2></div></div>
+  <p class="lead"><b>Create Health Monitoring Software for Astronauts on Space Missions</b> pide construir una <b>herramienta visual</b> que ayude a los astronautas a evaluar su propia salud durante misiones espaciales y les dé orientación sobre tratamientos y mejoras de salud.</p>
+  <p>El enunciado menciona como indicadores útiles: presión arterial, frecuencia cardíaca, glucosa en sangre, temperatura corporal, horas de sueño y estado de ánimo.</p>
+  <div class="callout"><b class="t">Ideas que sugiere el enunciado (opcionales)</b>Figura humana clickeable por partes del cuerpo · gráficos dinámicos de evolución en el tiempo · código de colores para ver el estado de un vistazo · recordatorios para tomar mediciones · gamificación · explicaciones simples para el astronauta.</div>
+  <p class="src">Fuente: <a href="https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/">Página oficial del desafío – Space Apps 2026</a></p>
+
+  <h3>Los cinco peligros de los vuelos espaciales según NASA</h3>
+  <div class="hazards">
+    <div class="hz h1c"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="12" r="2"/><path d="M12 10V3a9 9 0 0 1 7.8 4.5L13.7 11M10.3 11 4.2 7.5A9 9 0 0 1 12 3M13.7 13l6.1 3.5A9 9 0 0 1 4.2 16.5L10.3 13"/></svg><b>Radiación espacial</b><span>NASA la asocia, entre otros efectos, con mayor riesgo de cáncer.</span></div>
+    <div class="hz h2c"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="11" r="2.5"/><path d="M7.5 19c.8-2.4 2.5-3.6 4.5-3.6s3.7 1.2 4.5 3.6"/></svg><b>Aislamiento y confinamiento</b><span>Puede afectar la salud mental y el trabajo en equipo.</span></div>
+    <div class="hz h3c"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="5" cy="17" r="2.5"/><circle cx="19" cy="7" r="1.5"/><path d="M7.5 15.5 17.5 8" stroke-dasharray="2 2"/></svg><b>Distancia de la Tierra</b><span>Más lejos significa menos apoyo inmediato desde la Tierra.</span></div>
+    <div class="hz h4c"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10" ry="3.5" transform="rotate(-20 12 12)"/></svg><b>Campos de gravedad</b><span>Afectan huesos, músculos, equilibrio y circulación.</span></div>
+    <div class="hz h5c"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M4 20V10l8-6 8 6v10z"/><path d="M9 20v-5h6v5"/></svg><b>Ambientes hostiles o cerrados</b><span>Espacios cerrados con condiciones controladas, como la calidad del aire.</span></div>
+  </div>
+  <p class="note">Los nombres son de NASA; las descripciones cortas son un resumen del equipo basado en la lista de riesgos de la sección 4.</p>
+  <p class="src">Fuente: <a href="https://www.nasa.gov/hrp/hazards/">NASA Human Research Program – Hazards</a></p>
+</section>
+
+<!-- ================= 2 ================= -->
+<div class="pb"></div>
+<section>
+  <div class="sh"><div class="num">02</div><div><div class="label">Sección 2</div><h2>Dispositivos para astronautas</h2></div></div>
+  <p>Estos son los dispositivos que encontramos y pudimos comprobar en la fuente original.</p>
+  <table>
+    <thead><tr><th style="width:36%">Dispositivo</th><th style="width:27%">Formato</th><th>¿Usado en el espacio?</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Bio-Monitor (CSA)</td><td>Remera + vincha + tablet</td><td><span class="pill ok">Sí · Estación Espacial, desde dic. 2018</span></td></tr>
+      <tr><td class="k">Actiwatch Spectrum</td><td>Reloj</td><td><span class="pill ok">Sí · Estación Espacial</span></td></tr>
+      <tr><td class="k">T-Mini (ESA)</td><td>Vincha</td><td><span class="pill ok">Sí · Estación Espacial</span></td></tr>
+      <tr><td class="k">Wearable Monitoring</td><td>Chaleco</td><td><span class="pill ok">Sí · Estación Espacial</span></td></tr>
+      <tr><td class="k">Monitores ARCHeR</td><td>Muñeca</td><td><span class="pill ok">Sí · Artemis II</span></td></tr>
+      <tr><td class="k">Remera Gateway (Hexoskin)</td><td>Remera</td><td><span class="pill dev">En desarrollo</span></td></tr>
+      <tr><td class="k">EmbracePlus (Empatica)</td><td>Smartwatch</td><td><span class="pill unk">No confirmado</span></td></tr>
+      <tr><td class="k">SpacePatch (DLR)</td><td>Parche</td><td><span class="pill unk">No confirmado</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Detalle de cada dispositivo</h3>
+  <div class="cards">
+    <div class="card wide">
+      <div class="top"><h4>Bio-Monitor</h4><span class="pill ok">Usado en la Estación Espacial</span></div>
+      <div class="org">Agencia Espacial Canadiense · fabricado por Carré Technologies (Hexoskin)</div>
+      <div class="chips"><span>Pulso y ECG</span><span>Presión arterial</span><span>Respiración</span><span>Temperatura de la piel</span><span>Oxígeno en sangre</span><span>Actividad física</span></div>
+      <ul>
+        <li>Remera inteligente + vincha + aplicación en tablet; reemplaza varios equipos voluminosos y se puede usar durante el sueño y el ejercicio.</li>
+        <li>Se lanzó a la Estación Espacial en diciembre de 2018; el astronauta David Saint-Jacques lo usó a bordo.</li>
+        <li>Al terminar, la batería se conecta a una base que envía los datos a la Tierra.</li>
+      </ul>
+      <p class="src"><a href="https://www.asc-csa.gc.ca/eng/sciences/bio-monitor.asp">Agencia Espacial Canadiense – Bio-Monitor</a></p>
+    </div>
+
+    <div class="card wide">
+      <div class="top"><h4>Otros dispositivos de la Estación Espacial</h4><span class="pill ok">Usados en la Estación Espacial</span></div>
+      <div class="org">Artículo de NASA · 13/11/2024</div>
+      <ul>
+        <li><b>Actiwatch Spectrum:</b> reloj con acelerómetro y sensores de luz para medir el sueño. Datos de misiones anteriores mostraron que los astronautas duermen significativamente menos en vuelo.</li>
+        <li><b>T-Mini (Agencia Espacial Europea):</b> vincha que mide la temperatura corporal interna. El estudio Thermolab encontró que la temperatura sube más y más rápido al hacer ejercicio en el espacio que en la Tierra.</li>
+        <li><b>Wearable Monitoring:</b> chaleco con sensores de pulso y respiración durante el sueño.</li>
+        <li><b>Personal CO2 Monitor:</b> sensores en la ropa que miden el dióxido de carbono alrededor del astronauta.</li>
+        <li><b>EVARM y Active Dosimeter:</b> dosímetros de radiación que lleva puestos la tripulación.</li>
+      </ul>
+      <p class="src"><a href="https://www.nasa.gov/missions/station/iss-research/wearable-tech-for-space-station-research/">NASA – Wearable Tech for Space Station Research</a></p>
+    </div>
+
+    <div class="card">
+      <div class="top"><h4>Monitores ARCHeR</h4><span class="pill ok">Artemis II</span></div>
+      <div class="org">NASA</div>
+      <div class="chips"><span>Movimiento</span><span>Sueño</span><span>Luz</span></div>
+      <ul>
+        <li>Monitores de muñeca (actigrafía) usados antes, durante y después de la misión.</li>
+        <li>Estudian bienestar, actividad, sueño e interacciones de la tripulación.</li>
+      </ul>
+      <div class="warn">No encontramos resultados publicados de este estudio.</div>
+      <p class="src"><a href="https://www.nasa.gov/humans-in-space/artemis-ii-crew-to-advance-human-spaceflight-research/">NASA – Artemis II</a> · <a href="https://www.nasa.gov/reference/archer/">NASA – ARCHeR</a></p>
+    </div>
+
+    <div class="card">
+      <div class="top"><h4>Remera para Gateway</h4><span class="pill dev">En desarrollo</span></div>
+      <div class="org">Hexoskin · contrato de la Agencia Espacial Canadiense</div>
+      <div class="chips"><span>Pulso</span><span>Presión</span><span>Oxigenación</span><span>Temperatura</span><span>Actividad</span><span>Respiración</span></div>
+      <ul>
+        <li>Rediseño de la remera Astroskin para el espacio profundo; el gran desafío es la radiación.</li>
+        <li>Datos en tiempo real a una app que los analiza con IA. Llegada estimada por la empresa: 2028–2029.</li>
+      </ul>
+      <div class="warn">Nota de dic. 2024; los planes de Gateway pueden haber cambiado.</div>
+      <p class="src"><a href="https://www.space.com/space-exploration/artemis/astronauts-on-nasas-moon-orbiting-gateway-space-station-will-wear-smart-undershirts-to-stay-healthy">Space.com (21/12/2024)</a></p>
+    </div>
+
+    <div class="card">
+      <div class="top"><h4>EmbracePlus</h4><span class="pill unk">No confirmado</span></div>
+      <div class="org">Empatica · financiado en parte por TRISH</div>
+      <div class="chips"><span>Movimiento</span><span>Temperatura</span><span>Actividad cardíaca</span><span>Actividad eléctrica de la piel</span></div>
+      <ul>
+        <li>Smartwatch de grado médico con 5 sensores; envía los datos por Bluetooth a una app y guarda hasta 55 días sin conexión.</li>
+        <li>TRISH es financiado por Johnson Space Center y Baylor College of Medicine.</li>
+      </ul>
+      <div class="warn">Desarrollado para poder monitorear astronautas; sin confirmación de uso en el espacio.</div>
+      <p class="src"><a href="https://www.techbriefs.com/component/content/article/50798-medical-grade-smartwatch-can-monitor-astronauts-patients">Tech Briefs (01/01/2024)</a></p>
+    </div>
+
+    <div class="card">
+      <div class="top"><h4>SpacePatch</h4><span class="pill unk">No confirmado</span></div>
+      <div class="org">Agencia espacial alemana DLR</div>
+      <div class="chips"><span>Salud cardíaca</span><span>Resistente a radiación</span><span>Sin nube</span></div>
+      <ul>
+        <li>Sensor cardiobalístico pequeño y liviano para monitorear el corazón.</li>
+        <li>Procesa y analiza la señal con IA en el propio dispositivo, sin internet.</li>
+      </ul>
+      <div class="warn">Pensado para misiones posteriores a Artemis; no dice que ya haya volado.</div>
+      <p class="src"><a href="https://event.dlr.de/en/ila2026/spacepatch-ila2026/">DLR – SpacePatch (ILA 2026)</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3 ================= -->
+<div class="pb"></div>
+<section>
+  <div class="sh"><div class="num">03</div><div><div class="label">Sección 3</div><h2>Cómo leer datos de dispositivos reales</h2></div></div>
+  <p class="lead">Hay tres caminos verificados: conectarse directo por Bluetooth desde una página web, usar el kit de desarrollo de una marca en una app de celular, o pedir los datos a la nube del fabricante.</p>
+  <table>
+    <thead><tr><th style="width:22%">Opción</th><th style="width:22%">Lenguaje</th><th>Qué ofrece</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Web Bluetooth</td><td>JavaScript (navegador)</td><td>Pulso en vivo desde pulsómetros con el servicio estándar <code>heart_rate</code>. Funciona en ChromeOS, Chrome para Android 6.0+, Mac (Chrome 56+) y Windows 10 (Chrome 70+). Mozilla la marca como experimental; requiere HTTPS y permiso del usuario.</td></tr>
+      <tr><td class="k">Polar BLE SDK</td><td>Kotlin (Android)<br>Swift (iOS)</td><td>Transmisión en vivo de frecuencia cardíaca, ECG, acelerómetro, PPG y más. Compatible con Polar H10, H9, Verity Sense, OH1, Ignite 3, Vantage V3 / M3, Grit X2 / X2 Pro, Pacer / Pacer Pro y Polar 360 / Loop.</td></tr>
+      <tr><td class="k">Polar AccessLink</td><td>API web<br>(OAuth2, JSON o XML)</td><td>Ejercicios, actividad diaria, frecuencia cardíaca continua, sueño, Nightly Recharge, SleepWise y Elixir Biosensing (temperatura, ECG de muñeca, SpO2). Los datos llegan tras sincronizar, no en vivo.</td></tr>
+      <tr><td class="k">Fitbit → Google Health API</td><td>API web</td><td>Google indica migrar de la Fitbit Web API a la Google Health API. En la página consultada no figura la fecha exacta de cierre.</td></tr>
+    </tbody>
+  </table>
+  <p class="src">Fuentes: <a href="https://developer.chrome.com/docs/capabilities/bluetooth">Chrome – Web Bluetooth</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API">MDN – Web Bluetooth API</a> · <a href="https://github.com/polarofficial/polar-ble-sdk">Polar BLE SDK</a> · <a href="https://www.polar.com/accesslink-api/">Polar AccessLink</a> · <a href="https://developers.google.com/health/migration">Google Health API</a></p>
+
+  <h3>Así se recibe el pulso en vivo desde el navegador</h3>
+<pre><span class="k2">navigator</span>.bluetooth.<span class="k1">requestDevice</span>({ filters: [{ services: [<span class="k3">'heart_rate'</span>] }] })
+.<span class="k1">then</span>(device =&gt; device.gatt.<span class="k1">connect</span>())
+.<span class="k1">then</span>(server =&gt; server.<span class="k1">getPrimaryService</span>(<span class="k3">'heart_rate'</span>))
+.<span class="k1">then</span>(service =&gt; service.<span class="k1">getCharacteristic</span>(<span class="k3">'heart_rate_measurement'</span>))
+.<span class="k1">then</span>(characteristic =&gt; characteristic.<span class="k1">startNotifications</span>())
+.<span class="k1">then</span>(characteristic =&gt; {
+  characteristic.<span class="k1">addEventListener</span>(<span class="k3">'characteristicvaluechanged'</span>,
+                                  handleCharacteristicValueChanged);
+});</pre>
+  <div class="callout"><b class="t">Por qué nos sirve</b>Es la única opción que permite mostrar un dato real y en vivo desde una página web, sin instalar nada. Las APIs en la nube tienen demora y los kits de celular requieren hacer una app nativa.</div>
+</section>
+
+<!-- ================= 4 ================= -->
+<div class="pb"></div>
+<section>
+  <div class="sh"><div class="num">04</div><div><div class="label">Sección 4</div><h2>Recursos oficiales del desafío</h2></div></div>
+  <p>Resumen de los recursos publicados en la pestaña <i>Resources</i> del desafío. NASA aclara que no respalda sitios que no sean del gobierno de EE. UU. y que hay que respetar las condiciones de uso de datos de cada sitio.</p>
+  <p class="src">Fuente: <a href="https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/?tab=resources">Space Apps 2026 – Resources del desafío</a></p>
+
+  <h3>Los 17 riesgos de los vuelos espaciales (NASA)</h3>
+  <table>
+    <thead><tr><th style="width:21%">Categoría</th><th style="width:49%">Riesgos que lista NASA</th><th>Indicador posible en nuestra app *</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Fisiología humana<br><span class="pill unk">11 riesgos</span></td><td>Respuestas alteradas del sistema inmune; función sensoriomotora y vestibular alterada; adaptaciones cardiovasculares; enfermedad por descompresión; interacción huésped-microorganismos; hipoxia; alimentación y nutrición inadecuadas; lesiones en caminatas espaciales; menor aptitud cardiorrespiratoria y musculoesquelética; síndrome neuro-ocular (SANS); cambios óseos.</td><td>Pulso y presión; temperatura; glucosa y alimentación; minutos de ejercicio; síntomas.</td></tr>
+      <tr><td class="k">Comportamiento y factores humanos<br><span class="pill unk">5 riesgos</span></td><td>Cambios de comportamiento y trastornos psiquiátricos; trabajo en equipo inadecuado; sueño inadecuado y horarios irregulares; soporte inadecuado para operar sistemas; lesiones por cargas dinámicas.</td><td>Estado de ánimo; horas de sueño; carga de trabajo.</td></tr>
+      <tr><td class="k">Radiación espacial<br><span class="pill unk">1 riesgo</span></td><td>Cánceres inducidos por radiación.</td><td>Registro de exposición acumulada (dato simulado).</td></tr>
+    </tbody>
+  </table>
+  <p class="note">* Columna propuesta por el equipo, no por NASA.</p>
+  <p class="src">Fuente: <a href="https://www.nasa.gov/hrp/risks/">NASA HRP – Risks of Human Spaceflight</a></p>
+
+  <h3>Investigaciones de NASA relacionadas con monitoreo</h3>
+  <table>
+    <thead><tr><th style="width:31%">Estudio</th><th>Qué hace (según NASA)</th></tr></thead>
+    <tbody>
+      <tr><td class="k">ARCHeR · Artemis II</td><td>Monitoreó bienestar, actividad y sueño con un dispositivo de actigrafía en la muñeca (movimiento, sueño y exposición a la luz).</td></tr>
+      <tr><td class="k">Artemis II Standard Measures</td><td>La tripulación aportó un conjunto estándar de datos de salud a un banco de datos.</td></tr>
+      <tr><td class="k">Standard Measures · órbita baja</td><td>Recolección de un conjunto consistente de mediciones fisiológicas y psicológicas.</td></tr>
+      <tr><td class="k">Tempus Pro · pasado</td><td>Prueba de un dispositivo comercial de telemedicina para recolectar e integrar datos de salud.</td></tr>
+      <tr><td class="k">Immune Biomarkers · Artemis II</td><td>Análisis de muestras de sangre y saliva de la tripulación.</td></tr>
+      <tr><td class="k">Zero T2 · órbita baja</td><td>Cómo afecta a la salud y el rendimiento el ejercicio en el espacio sin cinta de correr.</td></tr>
+      <tr><td class="k">B-Complex · órbita baja</td><td>Si un suplemento diario de vitamina B puede prevenir o reducir cambios en el cerebro y los ojos.</td></tr>
+      <tr><td class="k">Space Gardening · pasado</td><td>Si cultivar verduras frescas puede aliviar la sensación de aislamiento y confinamiento.</td></tr>
+    </tbody>
+  </table>
+  <p class="src">Fuente: <a href="https://www.nasa.gov/hrp/ongoing-hrp-research/">NASA HRP – Ongoing HRP Research in Space</a></p>
+
+  <div class="cards" style="margin-top:4mm">
+    <div class="card">
+      <div class="top"><h4>Monitoreo de radiación</h4></div>
+      <div class="org">Agencia Espacial Canadiense · 26/02/2026</div>
+      <ul>
+        <li><b>CANS:</b> instrumento compacto y autónomo que mide la radiación de neutrones; pensado para la Estación Espacial y futuras misiones a la Luna y Marte.</li>
+        <li>Según la página, los neutrones son cerca del <b>30%</b> de la radiación total en la Estación Espacial.</li>
+        <li>Antecedentes: detectores de burbujas, MOSFET, EVARM y Radi-N / Radi-N2.</li>
+      </ul>
+      <p class="src"><a href="https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp">CSA – Monitoring Radiation for Astronaut Health</a></p>
+    </div>
+    <div class="card">
+      <div class="top"><h4>¿Por qué experimentar en el espacio?</h4></div>
+      <div class="org">Agencia Espacial Canadiense</div>
+      <ul>
+        <li>Los efectos de la ingravidez se describen como un "envejecimiento acelerado", parecido a una vida sedentaria: huesos, corazón, vasos sanguíneos y cerebro.</li>
+        <li>Las misiones a la Luna y Marte suman radiación, aislamiento y demoras en la comunicación.</li>
+        <li>Seis meses en el espacio dan datos que en la Tierra llevarían años.</li>
+      </ul>
+      <p class="src"><a href="https://www.asc-csa.gc.ca/eng/iss/science/why-do-we-conduct-science-experiments-in-space.asp">CSA – Why Do We Conduct Science Experiments in Space?</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5 ================= -->
+<div class="pb"></div>
+<section>
+  <div class="sh"><div class="num">05</div><div><div class="label">Sección 5</div><h2>Propuesta para el proyecto</h2></div></div>
+  <p class="note">Esta sección es una recomendación del equipo, no un dato de las fuentes.</p>
+  <div class="cards">
+    <div class="card"><div class="top"><h4>Base de la app</h4></div><p style="font-size:8.6pt;margin:0">Aplicación web en JavaScript con figura humana clickeable, semáforo de colores y gráficos de evolución.</p></div>
+    <div class="card"><div class="top"><h4>Dato real en vivo</h4></div><p style="font-size:8.6pt;margin:0">Pulso por Web Bluetooth si alguien del equipo tiene un pulsómetro o reloj compatible con el servicio estándar de frecuencia cardíaca.</p></div>
+    <div class="card"><div class="top"><h4>Resto de indicadores</h4></div><p style="font-size:8.6pt;margin:0">Presión, glucosa, temperatura, sueño y ánimo cargados a mano o simulados para la demo.</p></div>
+    <div class="card"><div class="top"><h4>Para el pitch</h4></div><p style="font-size:8.6pt;margin:0">Vincular cada parte del cuerpo con su riesgo oficial de NASA y mostrar que la idea es compatible con dispositivos ya usados en la Estación Espacial.</p></div>
+  </div>
+
+  <div class="sh" style="margin-top:9mm"><div class="num">06</div><div><div class="label">Sección 6</div><h2>Fuentes consultadas</h2></div></div>
+  <ol class="refs">
+    <li>Space Apps 2026: enunciado del desafío<a href="https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/">spaceappschallenge.org/2026/challenges/health-monitoring-software/</a></li>
+    <li>Space Apps 2026: recursos del desafío<a href="https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/?tab=resources">spaceappschallenge.org/…/health-monitoring-software/?tab=resources</a></li>
+    <li>NASA HRP: peligros de los vuelos espaciales<a href="https://www.nasa.gov/hrp/hazards/">nasa.gov/hrp/hazards/</a></li>
+    <li>NASA HRP: riesgos de los vuelos espaciales<a href="https://www.nasa.gov/hrp/risks/">nasa.gov/hrp/risks/</a></li>
+    <li>NASA HRP: investigaciones en curso<a href="https://www.nasa.gov/hrp/ongoing-hrp-research/">nasa.gov/hrp/ongoing-hrp-research/</a></li>
+    <li>Agencia Espacial Canadiense: Bio-Monitor<a href="https://www.asc-csa.gc.ca/eng/sciences/bio-monitor.asp">asc-csa.gc.ca/eng/sciences/bio-monitor.asp</a></li>
+    <li>NASA: Wearable Tech for Space Station Research (13/11/2024)<a href="https://www.nasa.gov/missions/station/iss-research/wearable-tech-for-space-station-research/">nasa.gov/missions/station/iss-research/wearable-tech-for-space-station-research/</a></li>
+    <li>NASA: Artemis II Crew to Advance Human Spaceflight Research<a href="https://www.nasa.gov/humans-in-space/artemis-ii-crew-to-advance-human-spaceflight-research/">nasa.gov/humans-in-space/artemis-ii-crew-to-advance-human-spaceflight-research/</a></li>
+    <li>NASA: ARCHeR<a href="https://www.nasa.gov/reference/archer/">nasa.gov/reference/archer/</a></li>
+    <li>Space.com: remeras inteligentes para Gateway (21/12/2024)<a href="https://www.space.com/space-exploration/artemis/astronauts-on-nasas-moon-orbiting-gateway-space-station-will-wear-smart-undershirts-to-stay-healthy">space.com/space-exploration/artemis/astronauts-on-nasas-moon-orbiting-gateway-…</a></li>
+    <li>Tech Briefs: EmbracePlus (01/01/2024)<a href="https://www.techbriefs.com/component/content/article/50798-medical-grade-smartwatch-can-monitor-astronauts-patients">techbriefs.com/…/50798-medical-grade-smartwatch-can-monitor-astronauts-patients</a></li>
+    <li>DLR: SpacePatch (ILA 2026)<a href="https://event.dlr.de/en/ila2026/spacepatch-ila2026/">event.dlr.de/en/ila2026/spacepatch-ila2026/</a></li>
+    <li>Agencia Espacial Canadiense: monitoreo de radiación (26/02/2026)<a href="https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp">asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp</a></li>
+    <li>Agencia Espacial Canadiense: por qué hacer experimentos en el espacio<a href="https://www.asc-csa.gc.ca/eng/iss/science/why-do-we-conduct-science-experiments-in-space.asp">asc-csa.gc.ca/eng/iss/science/why-do-we-conduct-science-experiments-in-space.asp</a></li>
+    <li>Chrome for Developers: Web Bluetooth<a href="https://developer.chrome.com/docs/capabilities/bluetooth">developer.chrome.com/docs/capabilities/bluetooth</a></li>
+    <li>MDN: Web Bluetooth API<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API">developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API</a></li>
+    <li>Polar: polar-ble-sdk (GitHub oficial)<a href="https://github.com/polarofficial/polar-ble-sdk">github.com/polarofficial/polar-ble-sdk</a></li>
+    <li>Polar: AccessLink API<a href="https://www.polar.com/accesslink-api/">polar.com/accesslink-api/</a></li>
+    <li>Google for Developers: migración a Google Health API<a href="https://developers.google.com/health/migration">developers.google.com/health/migration</a></li>
+  </ol>
+  <p class="note" style="margin-top:2mm">Todas las fuentes fueron abiertas y leídas el 14 de noviembre de 2026. Los enlaces del PDF se pueden clickear.</p>
+</section>
+
+</body>
+</html>
